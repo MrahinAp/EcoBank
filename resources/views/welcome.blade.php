@@ -45,13 +45,12 @@
                 {{-- Navigation Links --}}
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#home" class="text-gray-700 hover:text-ecobank-green transition font-medium">Home</a>
-                    <a href="#about" class="text-gray-700 hover:text-ecobank-green transition font-medium">About</a>
-                    <a href="#article" class="text-gray-700 hover:text-ecobank-green transition font-medium">Article</a>
-                    <a href="#gallery" class="text-gray-700 hover:text-ecobank-green transition font-medium">Gallery</a>
-                    <a href="#contact" class="text-gray-700 hover:text-ecobank-green transition font-medium">Contact</a>
+                    <a href="#about" class="text-gray-700 hover:text-ecobank-green transition font-medium">tentang</a>
+                    <a href="#article" class="text-gray-700 hover:text-ecobank-green transition font-medium">artikel</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-ecobank-green transition font-medium">Galeri</a>
+                    <a href="#contact" class="text-gray-700 hover:text-ecobank-green transition font-medium">Kontak</a>
                 </div>
-                
-                {{-- Login Button --}}
+        
                 <div>
                    
                 </div>

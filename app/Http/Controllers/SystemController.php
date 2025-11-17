@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Hash; // biar password aman
+use Illuminate\Support\Facades\Hash;
 use App\Models\Artikel;
 
 class SystemController extends Controller
@@ -18,7 +18,6 @@ class SystemController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        // Cari user di tabel login
         $user = DB::table('login')->where('username', $username)->first();
 
         if (!$user) {
@@ -29,21 +28,17 @@ class SystemController extends Controller
             return back()->with('error', 'Password salah!');
         }
 
-        // Simpan session user sebagai array
         Session::put('user', [
             'id' => $user->id,
             'username' => $user->username,
             'role' => $user->role,
-            'email' => $user->email ?? null,
-            'no_hp' => $user->no_hp ?? null
+            'email' => $user->email,
+            'no_hp' => $user->no_hp
         ]);
 
-        // Redirect sesuai role
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return redirect()->route('user.dashboard');
+        return $user->role === 'admin'
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('user.dashboard');
     }
 
     // ======================================================
@@ -51,7 +46,6 @@ class SystemController extends Controller
     // ======================================================
     public function registerProcess(Request $request)
     {
-        // Validasi sederhana
         $request->validate([
             'username' => 'required|unique:login,username',
             'password' => 'required|min:4',
@@ -59,33 +53,54 @@ class SystemController extends Controller
             'no_hp'  => 'required'
         ]);
 
-        // Simpan user baru
         DB::table('login')->insert([
             'username' => $request->username,
-            'password' => Hash::make($request->password), // hash password
+            'password' => Hash::make($request->password),
             'email' => $request->email,
             'no_hp' => $request->no_hp,
             'role' => 'user'
         ]);
 
-        // Redirect ke login dengan pesan sukses
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
+        return redirect()->route('login')->with('success', 'Akun berhasil dibuat!');
     }
 
     // ======================================================
     // Dashboard User
     // ======================================================
-    public function userDashboard()
-    {
-        $user = Session::get('user');
+public function userDashboard()
+{
+    $user = Session::get('user');
 
-        if (!$user || $user['role'] !== 'user') {
-            return redirect()->route('login')->with('error', 'Silakan login sebagai user!');
-        }
-
-        $artikels = Artikel::all();
-        return view('user.dashboard_user', compact('user', 'artikels'));
+    if (!$user || $user['role'] !== 'user') {
+        return redirect()->route('login')->with('error', 'Silakan login sebagai user!');
     }
+
+    // 👇 Filter berdasarkan nama user
+    $userName = $user['username']; // atau $user['nama'], sesuaikan dengan session Anda
+
+    // Total poin
+    $totalPoin = DB::table('tabungan_sampah')
+                    ->where('nama', $userName) // ✅ Filter by nama
+                    ->sum('point');
+
+    // Total berat sampah
+    $totalBerat = DB::table('tabungan_sampah')
+                    ->where('nama', $userName)
+                    ->sum('berat_sampah');
+
+    // Statistik per jenis sampah
+    $jenisSampah = DB::table('tabungan_sampah')
+                      ->select('jenis_sampah', DB::raw('SUM(berat_sampah) as total'))
+                      ->where('nama', $userName)
+                      ->groupBy('jenis_sampah')
+                      ->get();
+
+    $artikels = Artikel::all();
+
+    return view('user.dashboard_user', compact('user', 'totalPoin', 'totalBerat', 'jenisSampah', 'artikels'));
+}
+
+
 
     // ======================================================
     // Dashboard Admin

@@ -2,38 +2,42 @@
 
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\ArtikelController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TabunganController;
 use App\Models\Artikel;
+use Illuminate\Support\Facades\Route;
 
-// Halaman login utama
+// Login
 Route::get('/login', function () {
     return view('user.login');
 })->name('login');
 
-// Proses login
 Route::post('/login/process', [SystemController::class, 'login'])->name('login.process');
 
 // Logout
 Route::get('/logout', [SystemController::class, 'logout'])->name('logout');
 
-// Dashboard Admin + Artikel (admin only)
+// Register
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
+
+Route::post('/register', [SystemController::class, 'registerProcess'])->name('register.process');
+
+// Dashboard User
+Route::get('/user/dashboard', [SystemController::class, 'userDashboard'])->name('user.dashboard');
+
+// Dashboard Admin
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [SystemController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::resource('artikel', ArtikelController::class);
 });
 
-// Dashboard User
-Route::get('/user/dashboard', [SystemController::class, 'userDashboard'])->name('user.dashboard');
-
+// Welcome page
 Route::get('/', function () {
-    $artikels = Artikel::all(); // ambil artikel dari DB
+    $artikels = Artikel::all();
     return view('welcome', compact('artikels'));
 });
 
-
-Route::get('/register', function() {
-    return view('register');
-})->name('register');
-
-// Proses Register
-Route::post('/register', [SystemController::class, 'registerProcess'])->name('register.process');
+// Nabung Sampah
+Route::get('/nabung', [TabunganController::class, 'index'])->name('nabung.form');
+Route::post('/nabung', [TabunganController::class, 'store'])->name('nabung.store');
