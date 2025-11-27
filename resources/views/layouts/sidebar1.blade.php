@@ -14,7 +14,7 @@
             </div>
             <div>
                 <h1 class="font-bold text-xl">EcoBank</h1>
-                <p class="text-xs text-green-200">Dashboard User</p>
+                <p class="text-xs text-green-200">Dashboard Admin</p>
             </div>
         </div>
     </div>
@@ -40,9 +40,9 @@
 
             <!-- Dashboard -->
             <li>
-                <a href="{{ route('user.dashboard') }}"
+                <a href="{{ route('admin.dashboard') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl 
-                   {{ request()->routeIs('user.dashboard') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
+                   {{ request()->routeIs('admin.dashboard') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
                    transition-all duration-200 group">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z" />
@@ -53,43 +53,55 @@
 
             <!-- Profile -->
             <li>
-                <a href="{{ route('profil.user') }}"
+                <a href="{{ route('admin.kelola') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl 
-                   {{ request()->routeIs('profil.user') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
+                   {{ request()->routeIs('admin.kelola') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
                    transition-all duration-200 group">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">Profil</span>
+                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">kelola user</span>
                 </a>
             </li>
 
-            <!-- Nabung Sampah -->
+            <!-- kelola Sampah -->
             <li>
-                <a href="{{ route('nabung.form') }}"
+                <a href="{{ route('admin.kelola.sampah') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl 
-                   {{ request()->routeIs('nabung.form') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
+                   {{ request()->routeIs('admin.kelola.sampah') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
                    transition-all duration-200 group">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">Nabung Sampah</span>
+                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">kelola sampah</span>
                 </a>
             </li>
 
-            <!-- Riwayat -->
+            <!-- kelola artikel -->
             <li>
-                <a href="{{ route('riwayat.user') }}"
+                <a href="{{ route('admin.kelola.artikel') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl 
-                   {{ request()->routeIs('riwayat.user') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
+                   {{ request()->routeIs('admin.kelola.artikel') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
                    transition-all duration-200 group">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">Riwayat</span>
+                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">kelola artikel</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.contact') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl 
+                   {{ request()->routeIs('admin.contact') ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10' }} 
+                   transition-all duration-200 group">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="font-medium group-hover:translate-x-1 transition-transform duration-200">kelola contact</span>
                 </a>
             </li>
 
+        </ul>
         </ul>
     </nav>
 

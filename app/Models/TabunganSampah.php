@@ -8,7 +8,7 @@ class TabunganSampah extends Model
     protected $table = 'tabungan_sampah';
 
     protected $fillable = [
-        'nama',
+        'username',
         'jenis_sampah',
         'berat_sampah',
         'point',

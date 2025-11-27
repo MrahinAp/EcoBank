@@ -9,18 +9,28 @@ class TabunganController extends Controller
 {
     public function index()
     {
-        return view('user.nabung_user');
+        $user = session('user');
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login dulu!');
+        }
+        
+        return view('user.nabung_user', compact('user'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'jenis_sampah' => 'required',
-            'berat_sampah' => 'required|numeric',
+            'berat_sampah' => 'required|numeric|min:0.1',
             'gambar' => 'nullable|image|mimes:jpg,png,jpeg|max:4096',
         ]);
 
-        $nama = session('user.username');
+        $username = session('user.username');
+        
+        if (!$username) {
+            return back()->with('error', 'Session expired. Silakan login kembali!');
+        }
 
         // Hitung poin
         if ($request->jenis_sampah == 'organik' || $request->jenis_sampah == 'anorganik') {
@@ -32,18 +42,23 @@ class TabunganController extends Controller
         // Gambar Binary BLOB
         $gambarBlob = null;
         if ($request->hasFile('gambar')) {
-            $gambarBlob = file_get_contents($request->file('gambar')->path());
+            $gambarBlob = file_get_contents($request->file('gambar')->getRealPath());
         }
 
-        // Simpan ke database
-        TabunganSampah::create([
-            'nama' => $nama,
-            'jenis_sampah' => $request->jenis_sampah,
-            'berat_sampah' => $request->berat_sampah,
-            'point' => $poin,
-            'gambar' => $gambarBlob,
-        ]);
+        try {
+            // Simpan ke database
+            TabunganSampah::create([
+                'username' => $username,
+                'jenis_sampah' => $request->jenis_sampah,
+                'berat_sampah' => $request->berat_sampah,
+                'point' => $poin,
+                'gambar' => $gambarBlob,
+            ]);
 
-        return back()->with('success', 'Sampah berhasil ditabung! 👍');
+            return back()->with('success', 'Sampah berhasil ditabung!');
+            
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+        }
     }
 }

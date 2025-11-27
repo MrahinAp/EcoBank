@@ -1,24 +1,26 @@
-@extends('layouts.app')
+@extends('layouts.appa')
 
-@section('title', 'Dashboard User')
+@section('title', 'Dashboard Admin')
 
 @section('content')
 
 @php
-    $poin = $totalPoin ?? 0;
+    $totalPoin = $totalPoin ?? 0;
+    $totalBerat = $totalBerat ?? 0;
+    $totalUsers = $totalUsers ?? 0;
 
-    // Tentukan level pohon
-    if ($poin < 100) {
+    // Tentukan level pohon berdasarkan total poin keseluruhan
+    if ($totalPoin < 1000) {
         $treeLevel = 'benih';
-        $nextLevel = 100;
+        $nextLevel = 1000;
         $levelName = 'Benih';
-    } elseif ($poin < 200) {
+    } elseif ($totalPoin < 5000) {
         $treeLevel = 'kecil';
-        $nextLevel = 200;
+        $nextLevel = 5000;
         $levelName = 'Tunas';
-    } elseif ($poin < 500) {
+    } elseif ($totalPoin < 10000) {
         $treeLevel = 'setengah';
-        $nextLevel = 500;
+        $nextLevel = 10000;
         $levelName = 'Pohon Muda';
     } else {
         $treeLevel = 'besar';
@@ -28,8 +30,8 @@
 
     // Hitung progress ke level berikutnya
     if ($nextLevel) {
-        $prevLevel = $poin < 100 ? 0 : ($poin < 200 ? 100 : 200);
-        $progress = (($poin - $prevLevel) / ($nextLevel - $prevLevel)) * 100;
+        $prevLevel = $totalPoin < 1000 ? 0 : ($totalPoin < 5000 ? 1000 : 5000);
+        $progress = (($totalPoin - $prevLevel) / ($nextLevel - $prevLevel)) * 100;
     } else {
         $progress = 100;
     }
@@ -43,31 +45,31 @@
     {{-- Header --}}
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">
-            Selamat Datang, {{ $user['username'] }}!
+            Selamat Datang, Admin {{ $admin['username'] ?? 'Admin' }}!
         </h1>
-        <p class="text-gray-600 text-lg">Ayo kumpulkan poin dan besarkan pohonmu!</p>
+        <p class="text-gray-600 text-lg">Pantau pertumbuhan sistem dan aktivitas pengguna.</p>
     </div>
 
     {{-- Stats Cards Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         
-        {{-- Total Poin --}}
+        {{-- Total Pengguna --}}
         <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <p class="text-green-100 text-sm font-medium mb-1">Total Poin</p>
-                    <h3 class="text-4xl font-bold">{{ number_format($poin) }}</h3>
+                    <p class="text-green-100 text-sm font-medium mb-1">Total Pengguna</p>
+                    <h3 class="text-4xl font-bold">{{ number_format($totalUsers) }}</h3>
                 </div>
                 <div class="bg-white/20 p-4 rounded-xl">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                     </svg>
                 </div>
             </div>
-            <p class="text-green-100 text-sm">Level: <strong>{{ $levelName }}</strong></p>
+            <p class="text-green-100 text-sm">Pengguna Terdaftar</p>
         </div>
 
-        {{-- Total Berat --}}
+        {{-- Total Sampah Keseluruhan --}}
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
             <div class="flex items-center justify-between mb-4">
                 <div>
@@ -83,20 +85,20 @@
             <p class="text-blue-100 text-sm">Kilogram Terkumpul</p>
         </div>
 
-        {{-- Jenis Sampah --}}
+        {{-- Total Poin Keseluruhan --}}
         <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <p class="text-purple-100 text-sm font-medium mb-1">Jenis Sampah</p>
-                    <h3 class="text-4xl font-bold">{{ $jenisSampah->count() }}</h3>
+                    <p class="text-purple-100 text-sm font-medium mb-1">Total Poin</p>
+                    <h3 class="text-4xl font-bold">{{ number_format($totalPoin) }}</h3>
                 </div>
                 <div class="bg-white/20 p-4 rounded-xl">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
             </div>
-            <p class="text-purple-100 text-sm">Kategori Berbeda</p>
+            <p class="text-purple-100 text-sm">Level Sistem: <strong>{{ $levelName }}</strong></p>
         </div>
 
     </div>
@@ -111,7 +113,7 @@
                     <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                     </svg>
-                    Pertumbuhan Pohon
+                    Pertumbuhan Sistem
                 </h2>
                 
                 {{-- Pohon Display --}}
@@ -124,7 +126,7 @@
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm font-semibold text-gray-700">Level: {{ $levelName }}</span>
                         @if($nextLevel)
-                            <span class="text-sm font-semibold text-gray-700">{{ $poin }} / {{ $nextLevel }}</span>
+                            <span class="text-sm font-semibold text-gray-700">{{ $totalPoin }} / {{ $nextLevel }}</span>
                         @else
                             <span class="text-sm font-semibold text-green-600">Max Level!</span>
                         @endif
@@ -137,30 +139,30 @@
                     </div>
                     
                     @if($nextLevel)
-                        <p class="text-xs text-gray-500 mt-2">{{ $nextLevel - $poin }} poin lagi ke level berikutnya</p>
+                        <p class="text-xs text-gray-500 mt-2">{{ $nextLevel - $totalPoin }} poin lagi ke level berikutnya</p>
                     @else
-                        <p class="text-xs text-green-600 mt-2 font-semibold">Selamat! Pohonmu sudah maksimal!</p>
+                        <p class="text-xs text-green-600 mt-2 font-semibold">Selamat! Sistem sudah maksimal!</p>
                     @endif
                 </div>
 
                 {{-- Level Milestones --}}
                 <div class="space-y-2 text-left bg-gray-50 rounded-xl p-4">
-                    <h3 class="font-semibold text-gray-700 mb-3 text-center">Level Pohon</h3>
-                    <div class="flex items-center text-sm {{ $poin >= 0 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                    <h3 class="font-semibold text-gray-700 mb-3 text-center">Level Sistem</h3>
+                    <div class="flex items-center text-sm {{ $totalPoin >= 0 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
                         <span class="text-2xl mr-2">🌱</span>
-                        <span>Benih (0-99 poin)</span>
+                        <span>Benih (0-999 poin)</span>
                     </div>
-                    <div class="flex items-center text-sm {{ $poin >= 100 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                    <div class="flex items-center text-sm {{ $totalPoin >= 1000 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
                         <span class="text-2xl mr-2">🌿</span>
-                        <span>Tunas (100-199 poin)</span>
+                        <span>Tunas (1000-4999 poin)</span>
                     </div>
-                    <div class="flex items-center text-sm {{ $poin >= 200 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                    <div class="flex items-center text-sm {{ $totalPoin >= 5000 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
                         <span class="text-2xl mr-2">🌳</span>
-                        <span>Pohon Muda (200-499 poin)</span>
+                        <span>Pohon Muda (5000-9999 poin)</span>
                     </div>
-                    <div class="flex items-center text-sm {{ $poin >= 500 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                    <div class="flex items-center text-sm {{ $totalPoin >= 10000 ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
                         <span class="text-2xl mr-2">🌲</span>
-                        <span>Pohon Dewasa (500+ poin)</span>
+                        <span>Pohon Dewasa (10000+ poin)</span>
                     </div>
                 </div>
 
@@ -175,7 +177,7 @@
                         <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
-                        Statistik Sampah
+                        Statistik Sampah Keseluruhan
                     </h2>
                 </div>
 
@@ -210,7 +212,7 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Data</h3>
-                        <p class="text-gray-500">Mulai menabung sampah untuk melihat statistik</p>
+                        <p class="text-gray-500">Belum ada sampah yang dikumpulkan</p>
                     </div>
                 @endif
 
@@ -222,92 +224,9 @@
 </div>
 
 {{-- JS POHON --}}
-<script>
-    const treeLevel = "{{ $treeLevel }}";
-    const tree = document.getElementById('tree');
-    const pohon = { 
-        benih: "🌱", 
-        kecil: "🌿", 
-        setengah: "🌳", 
-        besar: "🌲" 
-    };
-    tree.innerHTML = pohon[treeLevel] || "🌱";
-</script>
 
+<script> const treeLevel = "{{ $treeLevel }}"; const tree = document.getElementById('tree'); const pohon = { benih: "🌱", kecil: "🌿", setengah: "🌳", besar: "🌲" }; tree.innerHTML = pohon[treeLevel] || "🌱"; </script>
 {{-- Chart.js --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    @if($jenisSampah->count() > 0)
-    const ctx = document.getElementById('sampahChart').getContext('2d');
-    const sampahChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: @json($labels),
-            datasets: [{
-                label: 'Berat Sampah (kg)',
-                data: @json($data),
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.8)',   // green
-                    'rgba(59, 130, 246, 0.8)',   // blue
-                    'rgba(239, 68, 68, 0.8)',    // red
-                ],
-                borderColor: [
-                    'rgba(34, 197, 94, 1)',
-                    'rgba(59, 130, 246, 1)',
-                    'rgba(239, 68, 68, 1)',
-                ],
-                borderWidth: 2,
-                borderRadius: 8,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: { 
-                    display: false 
-                },
-                title: { 
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 13
-                    },
-                    callbacks: {
-                        label: function(context) {
-                            return context.parsed.y + ' kg';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: { 
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return value + ' kg';
-                        }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-    @endif
-</script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <script> @if($jenisSampah->count() > 0) const ctx = document.getElementById('sampahChart').getContext('2d'); const sampahChart = new Chart(ctx, { type: 'bar', data: { labels: @json($labels), datasets: [{ label: 'Berat Sampah (kg)', data: @json($data), backgroundColor: [ 'rgba(34, 197, 94, 0.8)', // green 'rgba(59, 130, 246, 0.8)', // blue 'rgba(239, 68, 68, 0.8)', // red ], borderColor: [ 'rgba(34, 197, 94, 1)', 'rgba(59, 130, 246, 1)', 'rgba(239, 68, 68, 1)', ], borderWidth: 2, borderRadius: 8, }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, title: { display: false }, tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: 12, titleFont: { size: 14, weight: 'bold' }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return context.parsed.y + ' kg'; } } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)', }, ticks: { callback: function(value) { return value + ' kg'; } } }, x: { grid: { display: false } } } } }); @endif </script>
 @endsection
